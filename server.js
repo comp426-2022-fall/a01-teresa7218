@@ -17,31 +17,29 @@
 // If there is an error, put it on the console error and return. 
 // Do not be nice about exiting.
 const http = require('http')
+const fs = require('fs')
+const hostname = '127.0.0.1'
 
-const port = process.env.PORT || 3000
+const minimist = require('minimist');
+var args = minimist(process.argv);
+const port = args.port || 3000;
 
 const server = http.createServer((req, res) => {
-  res.statusCode = 200
-  res.setHeader('Content-Type', 'text/html')
-  res.end('./public/index.html')
-})
-const fs = require('fs');
-
-fs.readFile('./public/index.html', 'utf8', (err, data) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-  console.log(data);
-});
-server.listen(port, () => {
-  console.log(`Server running at port ${port}`)
+    var data;
+        try {
+            data = fs.readFileSync('./public/index.html', 'utf8');
+            // console.log(data);
+          } catch (err) {
+            console.error(err);
+          }
+    res.statusCode = 200
+    res.setHeader('Content-Type', 'text/html')
+    res.end(data)
 })
 
-const args = require('minimist')(process.argv.slice(2));
-
-args.port;
-
+server.listen(port, hostname, () => {
+  console.log(`Server listening on port ${port}`)
+})
 
 
 // Define a const `server` as an arrow function using http.createServer. 
