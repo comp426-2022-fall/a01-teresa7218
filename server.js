@@ -25,11 +25,22 @@ const server = http.createServer((req, res) => {
   res.setHeader('Content-Type', 'text/html')
   res.end('./public/index.html')
 })
+const fs = require('fs');
 
+fs.readFile('./public/index.html', 'utf8', (err, data) => {
+  if (err) {
+    console.error(err);
+    return;
+  }
+  console.log(data);
+});
 server.listen(port, () => {
   console.log(`Server running at port ${port}`)
 })
 
+const args = require('minimist')(process.argv.slice(2));
+
+args.port;
 
 
 
